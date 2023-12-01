@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-"""Defines a matrix multiplication function."""
+"""Defines a matrix multiplication function. """
 
 
 def matrix_mul(m_a, m_b):
