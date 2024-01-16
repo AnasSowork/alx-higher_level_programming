@@ -1,4 +1,2 @@
-/*
-showing databases
-*/
+-- showing databases
 SHOW DATABASE
