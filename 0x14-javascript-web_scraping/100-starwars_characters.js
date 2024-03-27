@@ -1,21 +1,49 @@
 #!/usr/bin/node
-// Script that prints all characters of a Star Wars movie
-let request = require('request');
-let url = 'https://swapi.co/api/films/' + process.argv[2];
-request.get(url, function (err, response, body) {
-  if (err) {
-    console.log(err);
-  } else if (response.statusCode === 200) {
-    const films = JSON.parse(body);
-    for (const character of films.characters) {
-      request.get(character, function (err, response, body) {
-        const films = JSON.parse(body);
-        if (err) {
-          console.log(err);
-        } else if (response.statusCode === 200) {
-          console.log(films.name);
-        }
-      });
-    }
+
+const request = require('request');
+
+const movieId = process.argv[2];
+
+if (!movieId) {
+  console.error('Usage: ./starwars_characters.js <movie_id>');
+  process.exit(1);
+}
+
+const url = `https://swapi-api.alx-tools.com/api/films/${movieId}`;
+
+request.get(url, function (error, response, body) {
+  if (error) {
+    console.error(error);
+    return;
   }
+
+  if (response.statusCode !== 200) {
+    console.error('Failed to fetch movie details');
+    return;
+  }
+
+  const movie = JSON.parse(body);
+  const characters = movie.characters;
+
+  if (!characters || characters.length === 0) {
+    console.log('No characters found for this movie.');
+    return;
+  }
+
+  characters.forEach(characterUrl => {
+    request.get(characterUrl, function (error, response, body) {
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      if (response.statusCode !== 200) {
+        console.error('Failed to fetch character details');
+        return;
+      }
+
+      const character = JSON.parse(body);
+      console.log(character.name);
+    });
+  });
 });
