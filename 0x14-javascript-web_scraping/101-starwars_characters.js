@@ -34,12 +34,12 @@ request.get(url, function (error, response, body) {
     return new Promise((resolve, reject) => {
       request.get(url, function (error, response, body) {
         if (error) {
-          reject(error);
+          reject(new Error(error));
           return;
         }
 
         if (response.statusCode !== 200) {
-          reject('Failed to fetch character details');
+          reject(new Error('Failed to fetch character details'));
           return;
         }
 
@@ -55,7 +55,7 @@ request.get(url, function (error, response, body) {
         const characterName = await fetchCharacter(characterUrl);
         console.log(characterName);
       } catch (error) {
-        console.error(error);
+        console.error(error.message);
       }
     }
   };
